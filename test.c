@@ -59,7 +59,7 @@ size_t hex2bin (void *bin, char hex[]) {
 
 void run_tests (void)
 {
-  size_t i, plen, clen, klen;
+  int i, plen, klen;
   uint8_t p1[32], p2[32], c1[32], c2[32], k[32];
   RC6_KEY rc6_key;
   
@@ -72,22 +72,22 @@ void run_tests (void)
     memset (k, 0, sizeof (k));
     
     klen=hex2bin (k, test_keys[i]);
-    clen=hex2bin (c1, test_ciphertexts[i]);
+    hex2bin (c1, test_ciphertexts[i]);
     plen=hex2bin (p1, test_plaintexts[i]);
     
     rc6_setkey (&rc6_key, k, klen);
     rc6_crypt (&rc6_key, p1, c2, RC6_ENCRYPT);
 
     if (memcmp (c1, c2, plen)==0) {
-      printf ("\nEncryption Passed test #%i", (i+1));
+      printf ("Encryption Passed test #%i\n", (i+1));
       rc6_crypt (&rc6_key, c2, p2, RC6_DECRYPT);
       if (memcmp (p1, p2, plen)==0) {
-        printf ("\nDecryption passed test #%i", (i+1));
+        printf ("Decryption passed test #%i\n", (i+1));
       } else {
-        printf ("\nDecryption failed");
+        printf ("Decryption failed\n");
       }
     } else {
-      printf ("\nFailed test #%i", (i+1));
+      printf ("Failed test #%i\n", (i+1));
     }
   }
 }

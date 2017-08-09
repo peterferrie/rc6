@@ -72,10 +72,10 @@ void rc6_crypt (RC6_KEY *key, void *input, void *output, int enc)
   out=(rc6_blk*)output;
   
   // load plaintext/ciphertext
-  A=in->v32[0];
-  B=in->v32[1];
-  C=in->v32[2];
-  D=in->v32[3];
+  A=in->w[0];
+  B=in->w[1];
+  C=in->w[2];
+  D=in->w[3];
   
   if (enc==RC6_ENCRYPT)
   {
@@ -126,8 +126,8 @@ void rc6_crypt (RC6_KEY *key, void *input, void *output, int enc)
     B -= *k; k--;
   }
   // save plaintext/ciphertext
-  out->v32[0]=A;
-  out->v32[1]=B;
-  out->v32[2]=C;
-  out->v32[3]=D;
+  out->w[0]=A;
+  out->w[1]=B;
+  out->w[2]=C;
+  out->w[3]=D;
 }
