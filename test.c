@@ -75,12 +75,14 @@ void run_tests (void)
     hex2bin (c1, test_ciphertexts[i]);
     plen=hex2bin (p1, test_plaintexts[i]);
     
-    rc6_setkey (&rc6_key, k, klen);
-    rc6_crypt (&rc6_key, p1, c2, RC6_ENCRYPT);
+    //rc6_setkey (&rc6_key, k, klen);
+    //rc6_crypt (&rc6_key, p1, c2, RC6_ENCRYPT);
+    memcpy (c2, p1, 16);
+    xrc6_crypt (k, c2);
 
     if (memcmp (c1, c2, plen)==0) {
       printf ("Encryption Passed test #%i\n", (i+1));
-      rc6_crypt (&rc6_key, c2, p2, RC6_DECRYPT);
+      //rc6_crypt (&rc6_key, c2, p2, RC6_DECRYPT);
       if (memcmp (p1, p2, plen)==0) {
         printf ("Decryption passed test #%i\n", (i+1));
       } else {
