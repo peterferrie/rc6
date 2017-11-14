@@ -26,7 +26,7 @@
   STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
   ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
   POSSIBILITY OF SUCH DAMAGE. */
-  
+
 #include "rc6.h"
 
 void rc6_crypt (void *key, void *data)
@@ -35,10 +35,10 @@ void rc6_crypt (void *key, void *data)
     uint32_t A, B, C, D, T0, T1, i;
     uint32_t S[RC6_KR], L[8];
     uint32_t *k;
-    
+
     x =(w128_t*)data;
     k =(uint32_t*)S;
-    
+
     // initialize L with 256-bit key
     memcpy(&L, key, 32);
 
@@ -47,23 +47,23 @@ void rc6_crypt (void *key, void *data)
       S[i] = A;
       A += RC6_Q;
     }
-    
-    // mix with key
+
+    // create subkeys
     for (A=0,B=0,i=0; i<RC6_KR*3; i++) {
-      A = S[i%RC6_KR] = ROTL32(S[i%RC6_KR] + A+B, 3);  
+      A = S[i%RC6_KR] = ROTL32(S[i%RC6_KR] + A+B, 3);
       B = L[i&7] = ROTL32(L[i&7] + A+B, A+B);
     }
-    
+
     // load plaintext
     A=x->w[0]; B=x->w[1];
     C=x->w[2]; D=x->w[3];
-    
+
     B += *k; k++; D += *k; k++;
-    
+
     for (i=0; i<RC6_ROUNDS; i++) {
       T0 = ROTL32(B * (2 * B + 1), 5);
       T1 = ROTL32(D * (2 * D + 1), 5);
-      
+
       A = ROTL32(A ^ T0, T1) + *k; k++;
       C = ROTL32(C ^ T1, T0) + *k; k++;
       // rotate 32-bits to the left
@@ -71,7 +71,7 @@ void rc6_crypt (void *key, void *data)
       A  = B; B  = C;
       C  = D; D  = T0;
     }
-    
+
     A += *k; k++; C += *k; k++;
 
     // save ciphertext
